@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ct-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ct-app
+  template:
+    metadata:
+      labels:
+        app: ct-app
+    spec:
+      containers:
+        - name: ct-app
+          image: anselmojr/conversao-temperatura:v1
+          ports:
+            - containerPort: 8080
+
+---
+#Deploy service
+apiVersion: v1
+kind: Service
+metadata:
+  name: ct-app
+spec:
+  selector:
+    app: ct-app
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+      nodePort: 30000
+  type: NodePort
